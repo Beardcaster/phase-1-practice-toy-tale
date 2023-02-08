@@ -44,18 +44,13 @@ function renderToyCards(toy){
   const btn = document.createElement("button");
   btn.innerText = "like"  
   btn.addEventListener('click', (e) => {
-    
-    let toyLikes = parseInt(toy.likes);
 
-    fetch(toyDatabase + `${toy.id}`, {
-      method: 'PATCH',
-      headers: {"Content-Type":"application/json",
-                Accept:"application/json"},
-      body: JSON.stringify({likes: toy.likes + 1})
-    }).then(resp => resp.json())
-    
-
+    toy.likes += 1;
+    likes.innerText = toy.likes;
+    updateLikes(toy)
+        
   })
+  
   toyDiv.appendChild(btn);
 }
 
@@ -75,19 +70,29 @@ function addNewToy(event) {
     headers: {
       'Content-type':'application/json',
       Accept:'application/json'},
-    body: JSON.stringify({
-      name: newToyName,
-      image: newToyImg,
-      likes: 0
-    })})
-    .then(resp => resp.json())
-    .then(data =>{
-      renderToyCards(data);
-    })
-  }
+      body: JSON.stringify({
+        name: newToyName,
+        image: newToyImg,
+        likes: 0
+      })})
+      .then(resp => resp.json())
+      .then(data =>{
+        renderToyCards(data);
+      })
+    }
+    
+    function updateLikes(toy){
 
-})
-
-
+      fetch(toyDatabase + `${toy.id}`, {
+        method: 'PATCH',
+        headers: {"Content-Type":"application/json",
+                  Accept:"application/json"},
+        body: JSON.stringify(toy) 
+      })
+    }
+    
+  })
+  
+  
   
   
